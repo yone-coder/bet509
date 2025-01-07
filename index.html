@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Home - My Website</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Firebase Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+
+    <style>
+        body {
+            background-color: #0D1B2A;
+            color: white;
+        }
+        .page-transition {
+            animation: fadeIn 0.3s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .error-message {
+            color: #ff4444;
+        }
+        .success-message {
+            color: #00C851;
+        }
+    </style>
+</head>
+<body class="font-roboto">
+    <!-- Main content container -->
+    <div id="mainContent">
+        <!-- Pages will be loaded here -->
+    </div>
+
+    <!-- Navigation Bar -->
+    <nav class="fixed bottom-0 left-0 right-0 shadow-lg bg-[#0D1B2A]">
+        <div class="flex justify-around">
+            <button data-page="home" class="nav-button p-2 active">
+                <i class="material-icons text-xl">home</i>
+                <span class="block text-xs">Home</span>
+            </button>
+            <button data-page="explore" class="nav-button p-2">
+                <i class="material-icons text-xl">search</i>
+                <span class="block text-xs">Explore</span>
+            </button>
+            <button data-page="live" class="nav-button p-2">
+    <i class="material-icons text-xl">live_tv</i>
+    <span class="block text-xs">Live</span>
+</button>
+            <button data-page="wallet" class="nav-button p-2">
+                <i class="material-icons text-xl">account_balance_wallet</i>
+                <span class="block text-xs">Wallet</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Firebase Configuration -->
+    <script>
+        const firebaseConfig = {
+            // Your Firebase config here
+            apiKey: "your-api-key",
+            authDomain: "your-auth-domain",
+            projectId: "your-project-id",
+            storageBucket: "your-storage-bucket",
+            messagingSenderId: "your-messaging-sender-id",
+            appId: "your-app-id"
+        };
+
+        // Initialize Firebase
+        const app = firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+    </script>
+
+    <!-- Main Application Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize page cache
+            const pageCache = {};
+
+            // Set up navigation event listeners
+            document.querySelectorAll('.nav-button').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const pageName = e.currentTarget.dataset.page;
+                    loadPageContent(pageName);
+                });
+            });
+
+           async function loadPageContent(pageName) {
+    try {
+        const mainContent = document.getElementById('mainContent');
+        
+        // Log for debugging
+        console.log(`Attempting to load page: ${pageName}`);
+
+        // Check if page is in cache, if not, fetch it
+        if (!pageCache[pageName]) {
+            const response = await fetch(`pages/${pageName}.html`);
+            
+            // Debug logging
+            console.log(`Fetch response for ${pageName}:`, response);
+
+            if (!response.ok) {
+                throw new Error(`Failed to load ${pageName}.html. Status: ${response.status}`);
+            }
+
+            // Store the page content in cache
+            pageCache[pageName] = await response.text();
+        }
+
+        // Apply transition effect
+        mainContent.classList.remove('page-transition');
+        void mainContent.offsetWidth; // Trigger reflow
+        mainContent.classList.add('page-transition');
+
+        // Update content
+        mainContent.innerHTML = pageCache[pageName];
+
+        // Update URL
+        const newUrl = `${window.location.origin}${window.location.pathname.replace(/[^/]*$/, '')}${pageName}`;
+        history.pushState({ page: pageName }, '', newUrl);
+
+        // Update active state in navigation
+        document.querySelectorAll('.nav-button').forEach(btn => {
+            btn.classList.remove('active');
+            if (btn.dataset.page === pageName) {
+                btn.classList.add('active');
+            }
+        });
+
+        // Initialize page-specific scripts
+        initPageScripts(pageName);
+
+        // Initialize authentication listeners if needed
+        initAuthListeners();
+
+    } catch (error) {
+        console.error('Error loading page:', error);
+        // Optionally, show an error message to the user
+        mainContent.innerHTML = `<div class="text-center text-red-500 mt-10">Failed to load page. Please try again.</div>`;
+    }
+}
+
+            // Handle browser back/forward buttons
+            window.onpopstate = function(event) {
+                if (event.state && event.state.page) {
+                    loadPageContent(event.state.page);
+                }
+            };
+
+            // Authentication helper functions
+            function showMessage(elementId, message, isError) {
+                const element = document.getElementById(elementId);
+                if (element) {
+                    element.textContent = message;
+                    element.classList.remove('hidden', 'error-message', 'success-message');
+                    element.classList.add(isError ? 'error-message' : 'success-message');
+                }
+            }
+
+            function validateEmail(email) {
+                return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+            }
+
+            function initAuthListeners() {
+                // Sign In Form
+                const signInBtn = document.getElementById('signInBtn');
+                if (signInBtn) {
+                    signInBtn.addEventListener('click', () => {
+                        const email = document.getElementById('signInEmail').value;
+                        const password = document.getElementById('signInPassword').value;
+
+                        if (!validateEmail(email)) {
+                            showMessage('signInMessage', 'Invalid email format.', true);
+                            return;
+                        }
+
+                        showMessage('signInMessage', 'Signing in...', false);
+
+                        auth.signInWithEmailAndPassword(email, password)
+                            .then((userCredential) => {
+                                showMessage('signInMessage', 'Signed in successfully!', false);
+                                document.getElementById('signInForm').classList.add('hidden');
+                                updateUI(userCredential.user);
+                            })
+                            .catch((error) => {
+                                showMessage('signInMessage', `Error: ${error.message}`, true);
+                            });
+                    });
+                }
+
+                // Sign Up Form
+                const signUpBtn = document.getElementById('signUpBtn');
+                if (signUpBtn) {
+                    signUpBtn.addEventListener('click', () => {
+                        const email = document.getElementById('signUpEmail').value;
+                        const password = document.getElementById('signUpPassword').value;
+
+                        if (!validateEmail(email)) {
+                            showMessage('signUpMessage', 'Invalid email format.', true);
+                            return;
+                        }
+
+                        showMessage('signUpMessage', 'Signing up...', false);
+
+                        auth.createUserWithEmailAndPassword(email, password)
+                            .then((userCredential) => {
+                                showMessage('signUpMessage', 'Signed up successfully!', false);
+                                document.getElementById('signUpForm').classList.add('hidden');
+                                updateUI(userCredential.user);
+                            })
+                            .catch((error) => {
+                                showMessage('signUpMessage', `Error: ${error.message}`, true);
+                            });
+                    });
+                }
+
+                // Form toggle buttons
+                const showSignInFormBtn = document.getElementById('showSignInFormBtn');
+                const showSignUpFormBtn = document.getElementById('showSignUpFormBtn');
+
+                if (showSignInFormBtn) {
+                    showSignInFormBtn.addEventListener('click', () => {
+                        document.getElementById('signInForm')?.classList.toggle('hidden');
+                        document.getElementById('signUpForm')?.classList.add('hidden');
+                    });
+                }
+
+                if (showSignUpFormBtn) {
+                    showSignUpFormBtn.addEventListener('click', () => {
+                        document.getElementById('signUpForm')?.classList.toggle('hidden');
+                        document.getElementById('signInForm')?.classList.add('hidden');
+                    });
+                }
+            }
+
+            // Page-specific scripts
+            const pageScripts = {
+    home: function() {
+        // Update UTC time and user login
+        const updateDateTime = () => {
+            const timeDisplay = document.getElementById('currentTime');
+            const userLogin = document.getElementById('userLogin');
+            
+            if (timeDisplay) {
+                const now = new Date();
+                timeDisplay.textContent = now.toISOString().replace('T', ' ').slice(0, 19);
+            }
+            
+            if (userLogin) {
+                userLogin.textContent = 'yone-coder';
+            }
+        };
+
+        // Update time every second
+        updateDateTime();
+        setInterval(updateDateTime, 1000);
+
+        // Original home page slider
+        const slides = document.querySelector('.slides');
+        if (slides) {
+            let currentIndex = 0;
+            const totalSlides = document.querySelectorAll('.slide').length;
+            setInterval(() => {
+                currentIndex = (currentIndex + 1) % totalSlides;
+                slides.style.transform = `translateX(-${currentIndex * 100}%)`;
+            }, 3000);
+        }
+    },
+
+    explore: function() {
+        // Your original explore page code
+        document.querySelectorAll('.category-pill')?.forEach(pill => {
+            pill.addEventListener('click', () => {
+                document.querySelectorAll('.category-pill').forEach(p => {
+                    p.classList.remove('active');
+                });
+                pill.classList.add('active');
+            });
+        });
+
+        const searchInput = document.querySelector('input[type="search"]');
+        searchInput?.addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            console.log('Searching for:', searchTerm);
+        });
+    },
+
+    live: function() {
+        // Go Live button functionality
+        const goLiveBtn = document.querySelector('.bg-red-600');
+        if (goLiveBtn) {
+            goLiveBtn.addEventListener('click', () => {
+                if (!auth.currentUser) {
+                    alert('Please sign in to start streaming');
+                    return;
+                }
+                console.log('Starting live stream...');
+            });
+        }
+
+        // Like button functionality
+        document.querySelectorAll('.like-button').forEach(button => {
+            button.addEventListener('click', (e) => {
+                e.preventDefault();
+                const likeCount = button.querySelector('.like-count');
+                if (likeCount) {
+                    const currentLikes = parseInt(likeCount.textContent);
+                    const isLiked = button.classList.contains('liked');
+                    
+                    if (isLiked) {
+                        likeCount.textContent = currentLikes - 1;
+                        button.classList.remove('liked');
+                    } else {
+                        likeCount.textContent = currentLikes + 1;
+                        button.classList.add('liked');
+                    }
+                }
+            });
+        });
+    },
+
+    wallet: function() {
+        // Add Funds button
+        const addFundsBtn = document.querySelector('.bg-blue-600');
+        if (addFundsBtn) {
+            addFundsBtn.addEventListener('click', () => {
+                if (!auth.currentUser) {
+                    alert('Please sign in to add funds');
+                    return;
+                }
+                console.log('Opening add funds dialog...');
+            });
+        }
+
+        // Send/Receive buttons
+        const sendBtn = document.querySelector('[data-action="send"]');
+        const receiveBtn = document.querySelector('[data-action="receive"]');
+        
+        if (sendBtn) {
+            sendBtn.addEventListener('click', () => {
+                if (!auth.currentUser) {
+                    alert('Please sign in to send funds');
+                    return;
+                }
+                console.log('Opening send money dialog...');
+            });
+        }
+        
+        if (receiveBtn) {
+            receiveBtn.addEventListener('click', () => {
+                if (!auth.currentUser) {
+                    alert('Please sign in to receive funds');
+                    return;
+                }
+                console.log('Opening receive money dialog...');
+            });
+        }
+
+        // Quick action buttons
+        document.querySelectorAll('.quick-action').forEach(button => {
+            button.addEventListener('click', () => {
+                if (!auth.currentUser) {
+                    alert('Please sign in to use this feature');
+                    return;
+                }
+                const action = button.dataset.action;
+                console.log(`Handling ${action} action...`);
+            });
+        });
+    }
+};
+
+function initPageScripts(pageName) {
+    if (pageScripts[pageName]) {
+        pageScripts[pageName]();
+    }
+}
+
+            // Load initial page
+            const currentPage = window.location.pathname.split('/').pop().replace('.html', '') || 'home';
+            loadPageContent(currentPage);
+
+            // Listen for auth state changes
+            auth.onAuthStateChanged((user) => {
+                updateUI(user);
+            });
+
+            function updateUI(user) {
+                const defaultHeader = document.getElementById('defaultHeader');
+                const userHeader = document.getElementById('userHeader');
+                const signOutBtn = document.getElementById('signOutBtn');
+                const showSignInFormBtn = document.getElementById('showSignInFormBtn');
+                const showSignUpFormBtn = document.getElementById('showSignUpFormBtn');
+
+                if (user) {
+                    defaultHeader?.classList.add('hidden');
+                    userHeader?.classList.remove('hidden');
+                    showSignInFormBtn?.classList.add('hidden');
+                    showSignUpFormBtn?.classList.add('hidden');
+                    signOutBtn?.classList.remove('hidden');
+                    const userEmail = document.getElementById('userEmail');
+                    if (userEmail) userEmail.textContent = user.email;
+                } else {
+                    defaultHeader?.classList.remove('hidden');
+                    userHeader?.classList.add('hidden');
+                    showSignInFormBtn?.classList.remove('hidden');
+                    showSignUpFormBtn?.classList.remove('hidden');
+                    signOutBtn?.classList.add('hidden');
+                }
+            }
+        });
+    </script>
+</body>
+</html>
