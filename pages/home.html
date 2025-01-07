@@ -1,0 +1,134 @@
+<div class="home-page">
+    <!-- Default Header for non-authenticated users -->
+    <header class="shadow-md p-2 flex justify-between items-center" id="defaultHeader">
+        <div class="flex items-center space-x-2">
+            <img src="https://storage.googleapis.com/a1aa/image/logo.png" alt="Logo" class="h-8 w-8">
+            <h1 class="text-xl font-bold">My Website</h1>
+        </div>
+        <div class="flex space-x-2">
+            <button id="showSignInFormBtn" class="bg-blue-500 text-white px-4 py-1 rounded">Sign In</button>
+            <button id="showSignUpFormBtn" class="bg-green-500 text-white px-4 py-1 rounded">Sign Up</button>
+        </div>
+    </header>
+
+    <!-- User Header for authenticated users -->
+    <header class="shadow-md p-2 flex justify-between items-center hidden" id="userHeader">
+        <div class="flex items-center space-x-2">
+            <img src="https://storage.googleapis.com/a1aa/image/logo.png" alt="Logo" class="h-8 w-8">
+            <h1 class="text-xl font-bold">My Website</h1>
+        </div>
+        <div class="flex items-center space-x-4">
+            <span id="userEmail" class="text-white"></span>
+            <button id="signOutBtn" class="bg-red-500 text-white px-4 py-1 rounded hidden">Sign Out</button>
+        </div>
+    </header>
+
+    <!-- Sign In Form -->
+    <div id="signInForm" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+        <div class="bg-[#1B263B] p-6 rounded-lg shadow-xl w-96">
+            <h2 class="text-xl font-bold mb-4">Sign In</h2>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm mb-1">Email</label>
+                    <input type="email" id="signInEmail" class="w-full p-2 rounded bg-[#2B3B4B] text-white" placeholder="Enter your email">
+                </div>
+                <div>
+                    <label class="block text-sm mb-1">Password</label>
+                    <input type="password" id="signInPassword" class="w-full p-2 rounded bg-[#2B3B4B] text-white" placeholder="Enter your password">
+                </div>
+                <div id="signInMessage" class="hidden"></div>
+                <button id="signInBtn" class="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600">Sign In</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sign Up Form -->
+    <div id="signUpForm" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+        <div class="bg-[#1B263B] p-6 rounded-lg shadow-xl w-96">
+            <h2 class="text-xl font-bold mb-4">Sign Up</h2>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm mb-1">Email</label>
+                    <input type="email" id="signUpEmail" class="w-full p-2 rounded bg-[#2B3B4B] text-white" placeholder="Enter your email">
+                </div>
+                <div>
+                    <label class="block text-sm mb-1">Password</label>
+                    <input type="password" id="signUpPassword" class="w-full p-2 rounded bg-[#2B3B4B] text-white" placeholder="Enter your password">
+                </div>
+                <div id="signUpMessage" class="hidden"></div>
+                <button id="signUpBtn" class="w-full bg-green-500 text-white py-2 rounded hover:bg-green-600">Sign Up</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-6">
+        <!-- Hero Section with Slider -->
+        <div class="relative overflow-hidden rounded-lg h-64 mb-8">
+            <div class="slides flex transition-transform duration-500">
+                <div class="slide min-w-full">
+                    <img src="https://storage.googleapis.com/a1aa/image/slide1.jpg" alt="Slide 1" class="w-full h-64 object-cover">
+                    <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
+                        <div class="text-center">
+                            <h2 class="text-3xl font-bold mb-2">Welcome to Gaming Hub</h2>
+                            <p class="text-lg">Discover amazing games and connect with players</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="slide min-w-full">
+                    <img src="https://storage.googleapis.com/a1aa/image/slide2.jpg" alt="Slide 2" class="w-full h-64 object-cover">
+                    <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
+                        <div class="text-center">
+                            <h2 class="text-3xl font-bold mb-2">Live Streaming</h2>
+                            <p class="text-lg">Watch your favorite streamers live</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="slide min-w-full">
+                    <img src="https://storage.googleapis.com/a1aa/image/slide3.jpg" alt="Slide 3" class="w-full h-64 object-cover">
+                    <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
+                        <div class="text-center">
+                            <h2 class="text-3xl font-bold mb-2">Gaming Marketplace</h2>
+                            <p class="text-lg">Trade items and customize your experience</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Featured Games Grid -->
+        <section class="mb-8">
+            <h2 class="text-2xl font-bold mb-4">Featured Games</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="bg-[#1B263B] rounded-lg overflow-hidden">
+                    <img src="https://storage.googleapis.com/a1aa/image/game1.jpg" alt="Game 1" class="w-full h-32 object-cover">
+                    <div class="p-3">
+                        <h3 class="font-medium">Cyber Quest</h3>
+                        <p class="text-sm text-gray-400">Action RPG</p>
+                    </div>
+                </div>
+                <div class="bg-[#1B263B] rounded-lg overflow-hidden">
+                    <img src="https://storage.googleapis.com/a1aa/image/game2.jpg" alt="Game 2" class="w-full h-32 object-cover">
+                    <div class="p-3">
+                        <h3 class="font-medium">Space Warriors</h3>
+                        <p class="text-sm text-gray-400">Strategy</p>
+                    </div>
+                </div>
+                <div class="bg-[#1B263B] rounded-lg overflow-hidden">
+                    <img src="https://storage.googleapis.com/a1aa/image/game3.jpg" alt="Game 3" class="w-full h-32 object-cover">
+                    <div class="p-3">
+                        <h3 class="font-medium">Dragon Tales</h3>
+                        <p class="text-sm text-gray-400">Adventure</p>
+                    </div>
+                </div>
+                <div class="bg-[#1B263B] rounded-lg overflow-hidden">
+                    <img src="https://storage.googleapis.com/a1aa/image/game4.jpg" alt="Game 4" class="w-full h-32 object-cover">
+                    <div class="p-3">
+                        <h3 class="font-medium">Pixel Warriors</h3>
+                        <p class="text-sm text-gray-400">Platformer</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+</div>

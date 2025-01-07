@@ -1,0 +1,135 @@
+<div class="explore-page">
+    <!-- Explore-specific header with search -->
+    <header class="shadow-md p-4 bg-[#1B263B]">
+        <div class="flex flex-col gap-4">
+            <div class="flex justify-between items-center">
+                <h1 class="text-xl font-bold">Explore</h1>
+                <button class="text-xl">
+                    <i class="material-icons">filter_list</i>
+                </button>
+            </div>
+            <div class="relative">
+                <input type="search" 
+                       placeholder="Search games, items, users..." 
+                       class="w-full px-4 py-2 rounded-full bg-[#2B3B4B] text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <i class="material-icons absolute right-3 top-2 text-gray-400">search</i>
+            </div>
+            <!-- Categories scrollable row -->
+            <div class="flex overflow-x-auto py-2 no-scrollbar">
+                <div class="category-pill active">All</div>
+                <div class="category-pill">Games</div>
+                <div class="category-pill">Items</div>
+                <div class="category-pill">Collections</div>
+                <div class="category-pill">Users</div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main content -->
+    <main class="container mx-auto mt-4 px-4 pb-20">
+        <!-- Trending Section -->
+        <section class="mb-6">
+            <h2 class="text-lg font-semibold mb-3">Trending Now</h2>
+            <div class="grid grid-cols-2 gap-4">
+                <div class="explore-card p-3">
+                    <img src="https://storage.googleapis.com/a1aa/image/game1.jpg" 
+                         alt="Game 1" 
+                         class="w-full h-32 object-cover rounded-lg mb-2">
+                    <h3 class="font-medium">Cyber Quest</h3>
+                    <p class="text-sm text-gray-400">1.2K players</p>
+                </div>
+                <div class="explore-card p-3">
+                    <img src="https://storage.googleapis.com/a1aa/image/game2.jpg" 
+                         alt="Game 2" 
+                         class="w-full h-32 object-cover rounded-lg mb-2">
+                    <h3 class="font-medium">Space Warriors</h3>
+                    <p class="text-sm text-gray-400">890 players</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- New Releases Section -->
+        <section class="mb-6">
+            <h2 class="text-lg font-semibold mb-3">New Releases</h2>
+            <div class="grid grid-cols-2 gap-4">
+                <div class="explore-card p-3">
+                    <img src="https://storage.googleapis.com/a1aa/image/game3.jpg" 
+                         alt="Game 3" 
+                         class="w-full h-32 object-cover rounded-lg mb-2">
+                    <h3 class="font-medium">Dragon Tales</h3>
+                    <p class="text-sm text-gray-400">New</p>
+                </div>
+                <div class="explore-card p-3">
+                    <img src="https://storage.googleapis.com/a1aa/image/game4.jpg" 
+                         alt="Game 4" 
+                         class="w-full h-32 object-cover rounded-lg mb-2">
+                    <h3 class="font-medium">Pixel Warriors</h3>
+                    <p class="text-sm text-gray-400">New</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Popular Collections Section -->
+        <section class="mb-6">
+            <h2 class="text-lg font-semibold mb-3">Popular Collections</h2>
+            <div class="grid grid-cols-2 gap-4">
+                <div class="explore-card p-3">
+                    <div class="grid grid-cols-2 gap-1 mb-2">
+                        <img src="https://storage.googleapis.com/a1aa/image/collection1-1.jpg" class="w-full h-16 object-cover rounded-sm">
+                        <img src="https://storage.googleapis.com/a1aa/image/collection1-2.jpg" class="w-full h-16 object-cover rounded-sm">
+                        <img src="https://storage.googleapis.com/a1aa/image/collection1-3.jpg" class="w-full h-16 object-cover rounded-sm">
+                        <img src="https://storage.googleapis.com/a1aa/image/collection1-4.jpg" class="w-full h-16 object-cover rounded-sm">
+                    </div>
+                    <h3 class="font-medium">Epic RPG Collection</h3>
+                    <p class="text-sm text-gray-400">4 items</p>
+                </div>
+                <div class="explore-card p-3">
+                    <div class="grid grid-cols-2 gap-1 mb-2">
+                        <img src="https://storage.googleapis.com/a1aa/image/collection2-1.jpg" class="w-full h-16 object-cover rounded-sm">
+                        <img src="https://storage.googleapis.com/a1aa/image/collection2-2.jpg" class="w-full h-16 object-cover rounded-sm">
+                        <img src="https://storage.googleapis.com/a1aa/image/collection2-3.jpg" class="w-full h-16 object-cover rounded-sm">
+                        <img src="https://storage.googleapis.com/a1aa/image/collection2-4.jpg" class="w-full h-16 object-cover rounded-sm">
+                    </div>
+                    <h3 class="font-medium">Adventure Bundle</h3>
+                    <p class="text-sm text-gray-400">6 items</p>
+                </div>
+            </div>
+        </section>
+    </main>
+</div>
+
+<style>
+    .category-pill {
+        background: #2B3B4B;
+        border-radius: 16px;
+        padding: 4px 12px;
+        margin-right: 8px;
+        white-space: nowrap;
+        cursor: pointer;
+        transition: background-color 0.2s;
+    }
+    
+    .category-pill.active {
+        background: #3B4B5B;
+    }
+    
+    .explore-card {
+        background: #1B263B;
+        border-radius: 8px;
+        transition: transform 0.2s;
+    }
+    
+    .explore-card:hover {
+        transform: scale(1.02);
+    }
+    
+    /* Hide scrollbar but keep functionality */
+    .no-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+    
+    .no-scrollbar::-webkit-scrollbar {
+        display: none;
+    }
+</style>
